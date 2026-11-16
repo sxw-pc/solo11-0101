@@ -28,6 +28,55 @@ def freeze_config(db_path,config):
         for item in subjects:
             db.execute("INSERT OR IGNORE INTO subject VALUES (?,?)",(item.get('box',item.get('id')),'batch-1'))
     db.close();return digest
+
+def _seq_key(identity,row):
+    device=row.get('device')
+    if device is None:
+        head=identity.split(':',1)[0]
+        device=head if head else identity
+    return str(device)
+
+def sequence_inventory(events):
+    """Group events carrying a seq per device key.
+
+    The inventory is derived only from immutable event rows, so it can be
+    recomputed identically after any config/anchor re-run. A gap is a missing
+    integer between the observed min/max seq of a device; every missing seq is
+    reported exactly once together with its flanking observed events.
+    """
+    seen={}
+    for e in events:
+        v=json.loads(e['payload'])
+        if 'seq' not in v: continue
+        try: seq=int(v['seq'])
+        except (TypeError,ValueError): continue
+        key=_seq_key(e['identity'],v)
+        bucket=seen.setdefault(key,{})
+        bucket[seq]=e['id']
+    gaps=[]
+    for device,bucket in sorted(seen.items()):
+        ordered=sorted(bucket)
+        lo,hi=ordered[0],ordered[-1]
+        present=set(ordered)
+        missing=[s for s in range(lo,hi+1) if s not in present]
+        # Contiguous missing seqs form ONE unknown block: n consecutive pulses
+        # that must be allocated as a group, never counted independently.
+        runs=[]
+        for seq in missing:
+            if runs and seq==runs[-1][-1]+1:
+                runs[-1].append(seq)
+            else:
+                runs.append([seq])
+        for i,run in enumerate(runs):
+            before=max(s for s in ordered if s<run[0])
+            after=min(s for s in ordered if s>run[-1])
+            gaps.append({'device':device,'missing_seqs':run,
+                         'missing_count':len(run),
+                         'before_event_id':bucket[before],
+                         'after_event_id':bucket[after],
+                         'gap_index':i,'gap_total':len(runs)})
+    return gaps
+
 def import_file(db_path,path):
     raw=Path(path).read_bytes(); digest=hash_bytes(raw);db=connect(db_path)
     if db.execute('SELECT 1 FROM source WHERE sha256=?',(digest,)).fetchone():
