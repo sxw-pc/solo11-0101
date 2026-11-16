@@ -1,0 +1,18 @@
+{
+  "stations": [
+    {
+      "id": "S1",
+      "offset_minutes": 480,
+      "device_models": {"D1": "T1"},
+      "coefficients": [
+        {
+          "effective": "2025-01-01T00:00:00Z",
+          "model": "T1",
+          "mm_per_pulse": 0.2
+        }
+      ],
+      "max_clock_drift_seconds": 60,
+      "max_mm_per_hour": 100
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{"kind": "anchor", "subject": "S1", "identity": "D1:1", "device": "D1", "seq": 1, "time": "2026-01-01T08:05:00Z", "offset_seconds": 0}
+{"kind": "heartbeat", "subject": "S1", "identity": "D1:2", "device": "D1", "seq": 2, "time": "2026-01-01T08:10:00Z"}
+{"kind": "pulse", "subject": "S1", "identity": "D1:3", "device": "D1", "seq": 3, "time": "2026-01-01T08:15:00Z", "count": 2}
+{"kind": "pulse", "subject": "S1", "identity": "D1:4", "device": "D1", "seq": 4, "time": "2026-01-01T08:20:00Z", "count": 3}
