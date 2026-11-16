@@ -102,3 +102,36 @@ def test_unknown_device_model_is_not_accepted(tmp_path):
     result,issues,_=run_case(tmp_path,events)
     assert result['S1']=='review'
     assert 'unknown_device_model' in issues
+
+
+def test_maintenance_end_is_exclusive(tmp_path):
+    events=fixture()
+    events.append({'kind':'maintenance','subject':'S1','identity':'M2','device':'D1',
+        'time':'2026-01-01T08:30:00Z','start':'2026-01-01T08:20:00Z','end':'2026-01-01T08:25:00Z'})
+    _,_,details=run_case(tmp_path,events)
+    assert list(details['hourly_mm'].values())==[0.4]
+
+
+def test_local_midnight_splits_hourly_buckets(tmp_path):
+    events=fixture();events[2]['time']='2026-01-01T15:55:00Z';events[3]['time']='2026-01-01T16:05:00Z'
+    _,_,details=run_case(tmp_path,events)
+    keys=list(details['hourly_mm'])
+    assert len(keys)==2
+    assert keys[0].startswith('2026-01-01') and keys[1].startswith('2026-01-02')
+
+
+def test_duplicate_station_contract_is_rejected(tmp_path):
+    import pytest
+    cfg=json.loads((BASE/'config.json').read_text());cfg['stations'].append(dict(cfg['stations'][0]))
+    p=tmp_path/'bad.json';p.write_text(json.dumps(cfg))
+    with pytest.raises(ValueError,match='duplicate_or_missing_subject'):
+        freeze_config(tmp_path/'bad.db',p)
+
+
+def test_report_contains_audit_entities(tmp_path):
+    from rainstation.report import export
+    run_case(tmp_path,fixture())
+    data=json.loads(export(tmp_path/'case.db',tmp_path/'report.json').read_text())
+    assert data['batch'] and data['subject'] and data['source'] and data['event']
+    assert data['decision'] and data['evidence'] and data['run']
+    assert len(data['evidence'])==len(fixture())

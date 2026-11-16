@@ -4,6 +4,8 @@ from collections import defaultdict
 from datetime import timedelta,timezone
 from .store import connect
 from .ingest import timestamp
+from .identity import model_for_device
+from .timeline import corrected_time,local_hour
 
 VERSION='1'
 def evaluate(db_path):
@@ -31,14 +33,12 @@ def evaluate(db_path):
                 elif kind=='heartbeat':heartbeats.append(time)
                 elif kind=='pulse':
                     if device in bad_devices:continue
-                    if device not in spec.get('device_models',{}):problems.append('unknown_device_model');continue
-                    applicable=[offset for anchor_time,offset in anchor_events[device] if anchor_time<=time]
-                    if not applicable:problems.append('clock_anchor_missing');continue
-                    corrected=time-timedelta(seconds=applicable[-1])
+                    model=model_for_device(spec,device)
+                    if model is None:problems.append('unknown_device_model');continue
+                    corrected=corrected_time(time,anchor_events[device])
+                    if corrected is None:problems.append('clock_anchor_missing');continue
                     if not any(start<=corrected<end for start,end in maintenance):
-                        model=spec['device_models'][device]
-                        local_hour=corrected.astimezone(tz).replace(minute=0,second=0,microsecond=0)
-                        pulses[(local_hour,model)]+=int(v.get('count',1))
+                        pulses[(local_hour(corrected,tz),model)]+=int(v.get('count',1))
             for device,values in seqs.items():
                 unique=set(values)
                 if unique and max(unique)-min(unique)+1!=len(unique):problems.append('sequence_gap')
@@ -59,8 +59,8 @@ def evaluate(db_path):
             if not pulses:problems.append('no_pulses')
             status='review' if any(p in problems for p in ('clock_drift','physical_spike','coefficient_missing','neighbor_disagreement','unknown_device_model')) else ('incomplete' if problems else 'trusted')
             detail=json.dumps({'hourly_mm':hourly,'issues':sorted(set(problems)),'evidence':[e['id'] for e in events]},ensure_ascii=False)
-            db.execute('INSERT INTO decision VALUES (?,?,?,?)',(site,status,detail,VERSION))
-            for e in events:db.execute('INSERT INTO evidence VALUES (?,?,?)',(site,e['id'],VERSION))
+            db.execute('INSERT INTO decision VALUES (?,?,?,?,?)',(site,status,detail,VERSION,run_id))
+            for e in events:db.execute('INSERT INTO evidence VALUES (?,?,?,?)',(site,e['id'],VERSION,run_id))
             for code in sorted(set(problems)):db.execute('INSERT INTO issue(code,detail) VALUES (?,?)',(code,site))
             results[site]=status
         for site in by:db.execute('INSERT INTO issue(code,detail) VALUES (?,?)',('unknown_station',site))
