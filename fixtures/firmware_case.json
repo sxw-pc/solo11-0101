@@ -6,14 +6,14 @@
       "station": "S1",
       "cell": "Ridge",
       "current_version": "1.0",
-      "pulse_source_sha256": "b09de33d9909e90e485ba55f4043e06d3ed57f53466837229bbb09342dffa1fe"
+      "pulse_source_sha256": "47ebc10fcee118a1a91e8eb4890ccb687f5cafca64c48ba0e87693fd6bd29e48"
     },
     {
       "id": "D2",
       "station": "S2",
       "cell": "Ridge",
       "current_version": "1.0",
-      "pulse_source_sha256": "b09de33d9909e90e485ba55f4043e06d3ed57f53466837229bbb09342dffa1fe",
+      "pulse_source_sha256": "47ebc10fcee118a1a91e8eb4890ccb687f5cafca64c48ba0e87693fd6bd29e48",
       "failure": "commit_then_ack_lost"
     },
     {
@@ -21,7 +21,7 @@
       "station": "S3",
       "cell": "Valley",
       "current_version": "1.0",
-      "pulse_source_sha256": "b09de33d9909e90e485ba55f4043e06d3ed57f53466837229bbb09342dffa1fe",
+      "pulse_source_sha256": "47ebc10fcee118a1a91e8eb4890ccb687f5cafca64c48ba0e87693fd6bd29e48",
       "failure": "reject"
     }
   ]

@@ -27,7 +27,8 @@ def test_firmware_endpoint_failure_and_recovery_primitives(tmp_path):
     assert invoke(db, 'upgrade-1', 'D2', 'install', '2.0', 'op-2', 0)['status'] == 'replayed'
     assert invoke(db, 'upgrade-1', 'D3', 'install', '2.0', 'op-3', 0)['status'] == 'rejected'
     assert invoke(db, 'upgrade-1', 'D1', 'rollback', '1.0', 'op-4', 1)['status'] == 'applied'
-    assert [state(db, x)['version'] for x in ('D1', 'D2', 'D3')] == ['1.0', '2.0', '1.0']
+    assert invoke(db, 'upgrade-1', 'D2', 'rollback', '1.0', 'op-5', 1)['status'] == 'applied'
+    assert [state(db, x)['version'] for x in ('D1', 'D2', 'D3')] == ['1.0', '1.0', '1.0']
 
 
 def test_firmware_requires_real_pulse_source(tmp_path):
