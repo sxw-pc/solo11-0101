@@ -1,0 +1,24 @@
+{
+  "rain_station": "S1",
+  "start": "2026-01-01T08:00:00Z",
+  "slot_minutes": 60,
+  "inflow_units_per_mm": 1,
+  "initial_storage": 60,
+  "max_storage": 100,
+  "initial_pond": 0,
+  "max_pond": 30,
+  "gate_max_per_slot": 40,
+  "pump_max_per_slot": 30,
+  "shared_power_max_active_devices": 1,
+  "gate_cooldown_slots": 1,
+  "downstream_travel_slots": 1,
+  "downstream_base": [
+    30,
+    0
+  ],
+  "downstream_hard_limit": 75,
+  "objectives": [
+    "min_downstream_peak",
+    "min_reservoir_high_water_exposure"
+  ]
+}

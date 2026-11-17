@@ -1,0 +1,15 @@
+{
+  "planned_policy": "min_downstream_peak",
+  "slot": 0,
+  "planned": {
+    "device": "pump",
+    "amount": 30
+  },
+  "actual": {
+    "device": "pump",
+    "amount": 25
+  },
+  "observed_storage_after_slot": 95,
+  "observed_pond_after_slot": 25,
+  "identity": "GATE-ACK-001"
+}
