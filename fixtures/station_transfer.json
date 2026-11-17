@@ -1,0 +1,59 @@
+{
+  "effective_at": "2026-06-01T00:00:00Z",
+  "loggers": [
+    {
+      "serial": "LOGGER-01",
+      "model": "T1",
+      "file": "LOGGER-01.txt",
+      "sha256": "d6e04bd02d5a2b8cd24b417799ee8833abfeab98afbed924318ced96b6823189",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_to": "2027-01-01T00:00:00Z"
+    },
+    {
+      "serial": "LOGGER-02",
+      "model": "T1",
+      "file": "LOGGER-02.txt",
+      "sha256": "b05a7ab595c376e107db4ad5f08fcad72a741ccfe2f4da1a73d2670edf4a51d7",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_to": "2027-01-01T00:00:00Z"
+    }
+  ],
+  "requests": [
+    {
+      "group": "BASIN-A",
+      "requested_at": "2026-02-01T08:00:00Z",
+      "stations": [
+        "S0",
+        "S1"
+      ],
+      "new_sites": [
+        "UPSTREAM-0",
+        "UPSTREAM-1"
+      ]
+    },
+    {
+      "group": "BASIN-B",
+      "requested_at": "2026-02-02T08:00:00Z",
+      "stations": [
+        "S2"
+      ],
+      "new_sites": [
+        "UPSTREAM-2"
+      ]
+    },
+    {
+      "group": "BASIN-C",
+      "requested_at": "2026-02-03T08:00:00Z",
+      "stations": [
+        "S3"
+      ],
+      "new_sites": [
+        "UPSTREAM-3"
+      ]
+    }
+  ],
+  "contracts": [
+    "oldest_complete_basin",
+    "max_completed_basins"
+  ]
+}
