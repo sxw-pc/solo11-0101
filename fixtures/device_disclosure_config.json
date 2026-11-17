@@ -1,0 +1,68 @@
+{
+  "stations": [
+    {
+      "id": "S1",
+      "offset_minutes": 0,
+      "device_models": {
+        "D1": "T2"
+      },
+      "coefficients": [
+        {
+          "effective": "2025-01-01T00:00:00Z",
+          "model": "T2",
+          "mm_per_pulse": 1
+        }
+      ],
+      "max_clock_drift_seconds": 60,
+      "max_mm_per_hour": 100
+    },
+    {
+      "id": "S2",
+      "offset_minutes": 0,
+      "device_models": {
+        "D2": "T1"
+      },
+      "coefficients": [
+        {
+          "effective": "2025-01-01T00:00:00Z",
+          "model": "T1",
+          "mm_per_pulse": 1
+        }
+      ],
+      "max_clock_drift_seconds": 60,
+      "max_mm_per_hour": 100
+    },
+    {
+      "id": "S3",
+      "offset_minutes": 0,
+      "device_models": {
+        "D3": "T2"
+      },
+      "coefficients": [
+        {
+          "effective": "2025-01-01T00:00:00Z",
+          "model": "T2",
+          "mm_per_pulse": 1
+        }
+      ],
+      "max_clock_drift_seconds": 60,
+      "max_mm_per_hour": 100
+    },
+    {
+      "id": "S4",
+      "offset_minutes": 0,
+      "device_models": {
+        "D4": "T1"
+      },
+      "coefficients": [
+        {
+          "effective": "2025-01-01T00:00:00Z",
+          "model": "T1",
+          "mm_per_pulse": 1
+        }
+      ],
+      "max_clock_drift_seconds": 60,
+      "max_mm_per_hour": 100
+    }
+  ]
+}
