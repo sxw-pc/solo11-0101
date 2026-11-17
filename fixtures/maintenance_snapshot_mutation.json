@@ -1,0 +1,12 @@
+{
+  "logical_path": "incoming/maintenance_batch.jsonl",
+  "initial_file": "maintenance_initial.jsonl",
+  "initial_sha256": "9b44eb4267da9a9f9fbc31f2861d66afbc09902df879562183b1509e4e9ce943",
+  "revised_file": "maintenance_revised.jsonl",
+  "revised_sha256": "bf71bf50c1271708b6df98ec81a523a02460433c880cb397e0582bad7efa5496",
+  "mutation_after_line": 1024,
+  "contracts": [
+    "freeze_on_open",
+    "verify_then_retry_latest"
+  ]
+}
