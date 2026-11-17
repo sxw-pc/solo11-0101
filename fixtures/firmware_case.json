@@ -1,0 +1,28 @@
+{
+  "target_version": "2.0",
+  "devices": [
+    {
+      "id": "D1",
+      "station": "S1",
+      "cell": "Ridge",
+      "current_version": "1.0",
+      "pulse_source_sha256": "b09de33d9909e90e485ba55f4043e06d3ed57f53466837229bbb09342dffa1fe"
+    },
+    {
+      "id": "D2",
+      "station": "S2",
+      "cell": "Ridge",
+      "current_version": "1.0",
+      "pulse_source_sha256": "b09de33d9909e90e485ba55f4043e06d3ed57f53466837229bbb09342dffa1fe",
+      "failure": "commit_then_ack_lost"
+    },
+    {
+      "id": "D3",
+      "station": "S3",
+      "cell": "Valley",
+      "current_version": "1.0",
+      "pulse_source_sha256": "b09de33d9909e90e485ba55f4043e06d3ed57f53466837229bbb09342dffa1fe",
+      "failure": "reject"
+    }
+  ]
+}
