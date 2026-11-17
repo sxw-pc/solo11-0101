@@ -1,0 +1,10 @@
+{
+  "tank_id": "TANK-01",
+  "station": "S1",
+  "hour": "2026-01-01T08:00:00Z",
+  "capacity_m3": 2.0,
+  "opening_m3": 0.0,
+  "closing_m3": 1.6,
+  "outflow_m3": 0.0,
+  "overflow_m3": 0.4
+}

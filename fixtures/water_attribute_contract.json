@@ -1,0 +1,16 @@
+{
+  "station": "S1",
+  "tank_id": "TANK-01",
+  "catchment_area_m2": 100,
+  "unit_m3_per_certificate": 0.2,
+  "file": "water_contracts/WATER-001.txt",
+  "sha256": "69685151966f23359173c098ea75e18bbbe4ebd9f50b46c7fdce0f15e0a68185",
+  "contracts": {
+    "gross_rain_title": {
+      "holder": "WATERSHED-AGENCY"
+    },
+    "retained_water_title": {
+      "holder": "FACILITY-OPERATOR"
+    }
+  }
+}
