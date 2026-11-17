@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS issue(id INTEGER PRIMARY KEY,code TEXT NOT NULL,detai
 CREATE TABLE IF NOT EXISTS decision(subject TEXT PRIMARY KEY,status TEXT NOT NULL,details TEXT NOT NULL,rule_version TEXT NOT NULL,run_id INTEGER NOT NULL REFERENCES run(id));
 CREATE TABLE IF NOT EXISTS evidence(subject TEXT NOT NULL REFERENCES subject(id),event_id INTEGER NOT NULL REFERENCES event(id),rule_version TEXT NOT NULL,run_id INTEGER NOT NULL REFERENCES run(id),PRIMARY KEY(subject,event_id,rule_version));
 CREATE TABLE IF NOT EXISTS run(id INTEGER PRIMARY KEY,started_at TEXT NOT NULL,completed_at TEXT,status TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS cleanout_container(id TEXT PRIMARY KEY,maintenance_identity TEXT NOT NULL,gross_kg TEXT NOT NULL,contaminant_kg TEXT NOT NULL,seal TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS cleanout_case(id TEXT PRIMARY KEY,payload TEXT NOT NULL,digest TEXT NOT NULL);
 """
 def connect(path):
     p=Path(path);p.parent.mkdir(parents=True,exist_ok=True)

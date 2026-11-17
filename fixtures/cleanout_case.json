@@ -1,0 +1,34 @@
+{
+  "station": "S1",
+  "maintenance_identity": "M1",
+  "containers_file": "cleanout_containers.csv",
+  "inspection_at": "2026-01-01T09:00:00+00:00",
+  "inspector": "ENV-TECH-1",
+  "contracts": [
+    {
+      "id": "closed_loop_sep",
+      "authorized_by": "WATER-BOARD",
+      "process_cert": "SEP-1",
+      "cert_valid_until": "2027-01-01T00:00:00+00:00",
+      "separation_rule": "certified process transfers all noncontaminant mass to reusable cleaning liquid and all contaminant mass to hazardous residue"
+    },
+    {
+      "id": "sealed_ship",
+      "authorized_by": "WATER-BOARD",
+      "carrier_license": "CAR-1",
+      "license_valid_until": "2027-01-01T00:00:00+00:00",
+      "manifest_id": "M-1",
+      "receipt": {
+        "id": "REC-M1",
+        "carrier": "CAR-1",
+        "signed_by": "DRIVER-1",
+        "accepted_containers": [
+          "C1",
+          "C2"
+        ],
+        "accepted_kg": "10.000",
+        "at": "2026-01-01T10:00:00+00:00"
+      }
+    }
+  ]
+}
