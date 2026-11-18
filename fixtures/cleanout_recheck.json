@@ -1,0 +1,9 @@
+{
+  "id": "RECHECK-1",
+  "inspector": "ENV-TECH-1",
+  "at": "2026-01-01T09:30:00+00:00",
+  "containers": [
+    {"container": "C1", "seal": "SEAL-A", "gross_kg": "6.000", "contaminant_kg": "1.500"},
+    {"container": "C2", "seal": "SEAL-B", "gross_kg": "4.000", "contaminant_kg": "0.500"}
+  ]
+}
