@@ -15,6 +15,9 @@ CREATE TABLE IF NOT EXISTS run(id INTEGER PRIMARY KEY,started_at TEXT NOT NULL,c
 CREATE TABLE IF NOT EXISTS terminal_firmware_device(id TEXT PRIMARY KEY,cell TEXT NOT NULL,version TEXT NOT NULL,revision INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS terminal_firmware_case(id TEXT PRIMARY KEY,payload TEXT NOT NULL,digest TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS terminal_firmware_operation(id TEXT PRIMARY KEY,device TEXT NOT NULL,command TEXT NOT NULL,result TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS firmware_rollout(id TEXT PRIMARY KEY,case_id TEXT NOT NULL,contract TEXT NOT NULL,target_version TEXT NOT NULL,status TEXT NOT NULL,created_at TEXT NOT NULL,updated_at TEXT NOT NULL,detail TEXT NOT NULL,half_upgraded_cells TEXT NOT NULL DEFAULT '[]');
+CREATE TABLE IF NOT EXISTS firmware_intent(operation_id TEXT PRIMARY KEY,rollout_id TEXT NOT NULL REFERENCES firmware_rollout(id),device TEXT NOT NULL,command TEXT NOT NULL,version TEXT NOT NULL,expected_revision INTEGER NOT NULL,phase TEXT NOT NULL,attempts INTEGER NOT NULL DEFAULT 0,created_at TEXT NOT NULL,updated_at TEXT NOT NULL,result TEXT,UNIQUE(rollout_id,device,command));
+CREATE TABLE IF NOT EXISTS firmware_rollout_device(rollout_id TEXT NOT NULL REFERENCES firmware_rollout(id),device TEXT NOT NULL,station TEXT NOT NULL,cell TEXT NOT NULL,pulse_source_sha256 TEXT NOT NULL,baseline_version TEXT NOT NULL,target_version TEXT NOT NULL,actual_version TEXT,actual_revision INTEGER,install_status TEXT,install_operation_id TEXT,install_response TEXT,reconciliation TEXT,rollback_status TEXT,rollback_operation_id TEXT,rollback_response TEXT,manual_reason TEXT,updated_at TEXT NOT NULL,PRIMARY KEY(rollout_id,device));
 """
 def connect(path):
     p=Path(path);p.parent.mkdir(parents=True,exist_ok=True)

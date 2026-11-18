@@ -7,3 +7,11 @@
 脉冲用最近的有效校时锚点修正为 UTC；无锚点标记 `clock_anchor_missing`。锚点偏移差超过阈值为 `clock_drift`，不可假装可信。维护窗口采用 `[start,end)`；窗口内测试脉冲不计自然降水。小时桶在 UTC 半开区间聚合，再按站点时区标记。系数按生效时间选择，缺失为 `coefficient_missing`；物理强度超限为 `physical_spike`，邻站差异为 `neighbor_disagreement`。设备断号、心跳缺失或间隔过大分别标记，形成 `trusted`、`incomplete`、`review` 结论。
 
 导入为事务，重复文件不重写；身份碰撞留 `identity_conflict`。每次重算只更新业务问题和决策，源事件不可变。当前不做实时遥测、洪峰预警或区域面雨量估算。
+
+## 固件灰度升级与断线恢复
+
+单台端点（`terminal_firmware`）只处理一次安装或回退，按操作 ID 幂等、按 revision 乐观并发控制。编排层（`rollout`）不绕过端点，而是在其外维护持久意图流水。
+
+请求生命周期阶段：`*_intended`（意图已落盘，请求未发出）→ `*_dispatched`（发出前记录）→ `*_ack_lost`（端点已提交但应答丢失）→ `*_reconciled`（终态）。崩溃后重跑先读阶段：处于 dispatched/ack_lost 的意图用同一操作 ID 重放，再以 `state` 现场查询复核；intended 阶段且现场不可达记为 `not_delivered`，链路恢复后用同一操作 ID 重试。`ack_lost` 只是传输症状，规范化后从不作为终端结论。
+
+补偿决策只认本编排真正 `applied` 的设备：被拒绝、未送达、revision 冲突或来源摘要隔离的设备不属于"已升级"，不产生回退。回退请求的目标版本固定为 case 基线版本，预期 revision 为本轮安装产生的 revision；现场 revision 不符说明有其他维护员改动，立即停止覆盖并转人工。报告实版只采信现场状态查询与端点持久证据，目标/计划版本永不写成实版。

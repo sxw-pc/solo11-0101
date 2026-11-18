@@ -107,6 +107,11 @@ def invoke(db_path, case_id, device, command, version, operation_id, expected_re
                 (operation_id, device, command, json.dumps(result, sort_keys=True)),
             )
             if command == 'install' and spec.get('failure') == 'commit_then_ack_lost':
+                # First invocation: the change is durably committed (the row
+                # above is in the same transaction) but the handheld never
+                # receives the acknowledgement. A replay of the same operation
+                # id hits the prior-record branch and returns the real result,
+                # so the ack-lost envelope is delivered exactly once.
                 return {'status': 'ack_lost'}
             return result
     finally:
