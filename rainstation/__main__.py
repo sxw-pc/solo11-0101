@@ -1,6 +1,7 @@
 import argparse,json,tempfile
 from pathlib import Path
 from .ingest import freeze_config,import_file
+from .migration import cancel_transfer, list_reservations, plan_transfer
 from .rules import evaluate
 from .report import export
 from .store import connect
@@ -17,9 +18,24 @@ def main():
     a=sub.add_parser('ingest');a.add_argument('--db',required=True);a.add_argument('--config',required=True);a.add_argument('events')
     e=sub.add_parser('inspect');e.add_argument('--db',required=True)
     r=sub.add_parser('report');r.add_argument('--db',required=True);r.add_argument('--out',required=True)
+    t=sub.add_parser('transfer',help='离线转配：求解未来站址/记录仪预约')
+    t.add_argument('--db',required=True);t.add_argument('--transfer',required=True)
+    t.add_argument('--cert-dir');t.add_argument('--contract',
+        choices=['oldest_complete_basin','max_completed_basins'])
+    c=sub.add_parser('transfer-cancel',help='取消整组迁站预约并释放设备/站址')
+    c.add_argument('--db',required=True);c.add_argument('--group',required=True)
+    lr=sub.add_parser('transfer-list',help='列出生效中的未来站址预约')
+    lr.add_argument('--db',required=True)
     args=p.parse_args()
     if args.cmd=='demo': print(demo(args.workdir))
     elif args.cmd=='ingest': freeze_config(args.db,args.config);print(import_file(args.db,args.events))
     elif args.cmd=='inspect': print(json.dumps(evaluate(args.db),ensure_ascii=False,indent=2))
     elif args.cmd=='report': print(export(args.db,args.out))
+    elif args.cmd=='transfer':
+        print(json.dumps(plan_transfer(args.db,args.transfer,args.cert_dir,args.contract),
+                         ensure_ascii=False,indent=2))
+    elif args.cmd=='transfer-cancel':
+        print(json.dumps(cancel_transfer(args.db,args.group),ensure_ascii=False,indent=2))
+    elif args.cmd=='transfer-list':
+        print(json.dumps(list_reservations(args.db),ensure_ascii=False,indent=2))
 if __name__=='__main__':main()

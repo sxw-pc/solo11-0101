@@ -7,3 +7,13 @@
 脉冲用最近的有效校时锚点修正为 UTC；无锚点标记 `clock_anchor_missing`。锚点偏移差超过阈值为 `clock_drift`，不可假装可信。维护窗口采用 `[start,end)`；窗口内测试脉冲不计自然降水。小时桶在 UTC 半开区间聚合，再按站点时区标记。系数按生效时间选择，缺失为 `coefficient_missing`；物理强度超限为 `physical_spike`，邻站差异为 `neighbor_disagreement`。设备断号、心跳缺失或间隔过大分别标记，形成 `trusted`、`incomplete`、`review` 结论。
 
 导入为事务，重复文件不重写；身份碰撞留 `identity_conflict`。每次重算只更新业务问题和决策，源事件不可变。当前不做实时遥测、洪峰预警或区域面雨量估算。
+
+## 迁站转配（未来预约台账）
+
+`migration.plan_transfer` 在不触碰冻结证据的前提下，求解未来站址与已检定记录仪的真实转配。申请站点必须在冻结 `config_json` 名单内；记录仪按迁站生效时刻逐站核验：型号须在该站冻结 `device_models` 内，证书以真实字节 SHA-256 对表、生效时刻须落在 `[valid_from, valid_to)` 半开有效期内。
+
+台账为 `migration_request`（申请结论与拒绝原因）、`migration_reservation`（生效区间、旧站点、目标站址、设备序列号、证书版本、申请组）、`migration_audit`（reserve/reject/cancel 全量动作）。预约生效区间为 `[effective_at, valid_to)`；同一记录仪在同一生效区间只能交付一个新站址，同一新站址也只能被一个站点占用，数据库部分唯一索引兜底。
+
+整组原子：一个流域迁站组必须同时拿到互不相同的合格设备才确认，否则整组拒绝、零预约零占用。求解在设备数、证书资格、站址唯一性与整组完成四个约束上联立二分匹配，绝不按站点逐条先占。两种授权合同：`oldest_complete_basin` 按申请时间优先最早可完整履约的组（组名破同分）；`max_completed_basins` 先最大化可完整迁站的组数、再按申请时间破同分。
+
+申请以组、站点、新站址、申请/生效时刻、合同与记录仪清单的规范哈希去重，重跑幂等回放既有结论。`cancel_transfer` 仅把预约转为 `cancelled` 并即时释放资源，台账行与审计保留，取消后的再分配全程可追溯。预约只写三张迁移表，`meta`、`source`、`event`、`issue`、`evidence`、`decision` 与既往脉冲的设备型号解释均不变。
