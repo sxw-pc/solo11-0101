@@ -12,6 +12,25 @@ CREATE TABLE IF NOT EXISTS issue(id INTEGER PRIMARY KEY,code TEXT NOT NULL,detai
 CREATE TABLE IF NOT EXISTS decision(subject TEXT PRIMARY KEY,status TEXT NOT NULL,details TEXT NOT NULL,rule_version TEXT NOT NULL,run_id INTEGER NOT NULL REFERENCES run(id));
 CREATE TABLE IF NOT EXISTS evidence(subject TEXT NOT NULL REFERENCES subject(id),event_id INTEGER NOT NULL REFERENCES event(id),rule_version TEXT NOT NULL,run_id INTEGER NOT NULL REFERENCES run(id),PRIMARY KEY(subject,event_id,rule_version));
 CREATE TABLE IF NOT EXISTS run(id INTEGER PRIMARY KEY,started_at TEXT NOT NULL,completed_at TEXT,status TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS disclosure_ledger(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  audience TEXT NOT NULL,
+  request_id TEXT NOT NULL,
+  release_id TEXT,
+  policy TEXT NOT NULL,
+  stations_json TEXT NOT NULL,
+  t2_count INTEGER,
+  request_json TEXT NOT NULL,
+  file_path TEXT,
+  file_sha256 TEXT,
+  status TEXT NOT NULL,
+  reason TEXT,
+  rule_version TEXT NOT NULL,
+  batch_id TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  UNIQUE(audience,request_id)
+);
+CREATE INDEX IF NOT EXISTS idx_disclosure_audience ON disclosure_ledger(audience,status);
 """
 def connect(path):
     p=Path(path);p.parent.mkdir(parents=True,exist_ok=True)
